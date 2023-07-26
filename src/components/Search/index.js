@@ -1,14 +1,16 @@
-import styled from 'styled-components'
-import Input from '../Input'
-import { useState } from 'react'
-import { livros } from './dadosPesquisa'
+import styled from 'styled-components';
+import Input from '../Input';
+import { useEffect, useState } from 'react';
+import { getLivros } from '../../services/livros';
+import livroImg from '../../assets/livro.png';
+import { postFavorito } from '../../services/favoritos';
 
 const PesquisaContainer = styled.section`
   background-image: linear-gradient(90deg, #002F52 35%, #326589 165%);
   color: #FFF;
   text-align: center;
   padding: 85px 0;
-  height: 270px;
+  height: auto;
   width: 100%;
 `
 const Titulo = styled.h2`
@@ -40,7 +42,22 @@ const Resultado = styled.div`
 `
 
 export default function Search() {
-  const [livrosPesquisados, setLivrosPesquisados] = useState([])
+  const [livrosPesquisados, setLivrosPesquisados] = useState([]);
+  const [livros, setLivros] = useState([]);
+
+  useEffect(() => {
+    fetchLivros()
+  }, [])
+
+  async function fetchLivros() {
+    const livrosAPI = await getLivros();
+    setLivros(livrosAPI);
+  }
+
+  async function insertFavorito(id) {
+    await postFavorito(id)
+  }
+
   const handleChange = (event) => {
     const textoDigitado = event.target.value
     const resultado = livros.filter(livro => livro.nome.toLowerCase().includes(textoDigitado.toLowerCase()))
@@ -61,9 +78,9 @@ export default function Search() {
         onChange={handleChange}
       />
       {livrosPesquisados.map(livro => (
-        <Resultado key={livro.id}>
+        <Resultado key={livro.id} onClick={() => insertFavorito(livro.id)}>
           <p>{livro.nome}</p>
-          <img src={livro.src} placeholder={livro.nome} alt={livro.nome} />
+          <img src={livroImg} alt="Capa do livro" />
         </Resultado>
       ))}
     </PesquisaContainer>

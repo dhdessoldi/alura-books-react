@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App';
 import { createGlobalStyle } from 'styled-components';
+import AppRoutes from './routes';
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -20,12 +20,16 @@ const GlobalStyle = createGlobalStyle`
   li {
     list-style: none;    
   }
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
 `
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <GlobalStyle />
-    <App />
+    <AppRoutes />
   </React.StrictMode>
 );
